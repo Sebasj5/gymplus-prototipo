@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gymplus - Prototipo de Sistema de Gestión</title>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --recepcion-color: #64748b;
+            --socio-color: #0284c7;
+            --admin-color: #9333ea;
+            --trainer-color: #16a34a;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #0f172a;
+        }
+
+        header p {
+            color: #64748b;
+        }
+
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: #e2e8f0;
+            color: #475569;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: white;
+        }
+
+        .tab-btn[data-target="recepcion"].active { background-color: var(--recepcion-color); }
+        .tab-btn[data-target="socio"].active { background-color: var(--socio-color); }
+        .tab-btn[data-target="admin"].active { background-color: var(--admin-color); }
+        .tab-btn[data-target="trainer"].active { background-color: var(--trainer-color); }
+
+
+        .phone-frame {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 8px solid #0f172a;
+            display: flex;
+            flex-direction: column;
+            min-height: 650px;
+        }
+
+        .phone-header {
+            background: #0f172a;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .screen-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .screen-content.active {
+            display: flex;
+        }
+
+        /* Elementos UI Comunes */
+        .logo-box {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #334155;
+            margin: 10px 0;
+            border: 2px dashed #cbd5e1;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        .card-item {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #16a34a;
+            font-size: 13px;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+            font-size: 13px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gymplus</h1>
+        <p>Interfaz basada en los diagramas de flujo y arquitectura de clases</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-target="recepcion" onclick="switchTab('recepcion')">1. Recepción (Ingreso)</button>
+        <button class="tab-btn" data-target="socio" onclick="switchTab('socio')">2. Socio (Consulta)</button>
+        <button class="tab-btn" data-target="admin" onclick="switchTab('admin')">3. Administrador (Pago)</button>
+        <button class="tab-btn" data-target="trainer" onclick="switchTab('trainer')">4. Entrenador (Rutinas)</button>
+    </div>
+
+
+    <div class="phone-frame">
+        <div class="phone-header" id="phone-title">Control de Ingreso - Recepción</div>
+
+        <div id="recepcion" class="screen-content active">
+            <div class="logo-box">[ Buscar socio por carné o documento ]</div>
+            <h4>Socios Recientes</h4>
+            <div class="card-item"><span>Miyan Valeria Zapata Gutiérrez (E. Gimnasio)</span> <span>&gt;</span></div>
+            <div class="card-item"><span>Sebastian Martinez  (E. Gimnasio)</span> <span>&gt;</span></div>
+            <div class="card-item"><span>La profe (E. Gimnasio)</span> <span>&gt;</span></div>
+            <button class="btn btn-primary" onclick="alert('Escaneando carné o documento del usuario...')">Escanear carné o documento</button>
+            <div class="alert-success">
+                <strong>Decisión (Sí):</strong> Membresía Vigente. Registrar Asistencia con éxito.
+            </div>
+        </div>
+
+
+        <div id="socio" class="screen-content">
+            <div class="logo-box">Logo FitCore</div>
+            <h4>Mi Membresía</h4>
+            <div class="card-item">
+                <div>
+                    <strong>Nombre Ficticio</strong><br>
+                    <small style="color: #16a34a;">Membresía Vigente - Estado Activo</small>
+                </div>
+            </div>
+            <p><strong>Días restantes:</strong> 15 días</p>
+            <p><strong>Saldo de clases:</strong> 8 clases disponibles</p>
+            <hr>
+            <h4>Ejercicios Asignados (Hoy)</h4>
+            <div class="card-item"><span>Prensa 4x10</span> <span style="font-size:12px; background:#ddd; padding:4px 8px; border-radius:4px;">Detalles</span></div>
+            <div class="card-item"><span>Sentadillas 3x12</span> <span style="font-size:12px; background:#ddd; padding:4px 8px; border-radius:4px;">Detalles</span></div>
+        </div>
+
+        <div id="admin" class="screen-content">
+            <h4>Panel de Administración</h4>
+            <input type="text" placeholder="Buscar socio por nombre o ID...">
+            <button class="btn btn-primary" style="background-color: var(--admin-color);">Registrar Pagos</button>
+            <hr>
+            <h4>Registrar el Pago</h4>
+            <input type="number" placeholder="Monto ($)">
+            <select>
+                <option value="">Seleccionar Método de Pago</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+            <button class="btn btn-success" onclick="alert('¡Pago registrado con éxito! Nueva fecha de vencimiento actualizada.')">Confirmar Pago</button>
+        </div>
+
+        <div id="trainer" class="screen-content">
+            <h4>Panel de Rutinas</h4>
+            <button class="btn" style="background-color: #16a34a; color: white;">+ Nueva Rutina</button>
+            <hr>
+            <h4>Seleccionar Ejercicios</h4>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" checked> Pecho</label>
+                <label class="checkbox-item"><input type="checkbox" checked> Espalda</label>
+                <label class="checkbox-item"><input type="checkbox"> Piernas</label>
+                <label class="checkbox-item"><input type="checkbox"> Piernas (Avanzado)</label>
+            </div>
+            <button class="btn btn-primary" style="background-color: var(--trainer-color);" onclick="alert('Rutina completa asignada al perfil del socio.')">Asignar Rutina</button>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.screen-content').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            const titles = {
+                'recepcion': 'Control de Ingreso - Recepción',
+                'socio': 'Flujo del Socio - Consulta y Rutina',
+                'admin': 'Flujo del Administrador - Registro de Pago',
+                'trainer': 'Flujo del Entrenador - Gestión de Rutinas'
+            };
+            document.getElementById('phone-title').innerText = titles[tabId];
+        }
+    </script>
+</body>
+</html>
